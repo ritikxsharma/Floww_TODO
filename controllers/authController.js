@@ -10,15 +10,10 @@ const { comparePassword } = require("../utilities/passwordUtils");
 const registerUser = async (req, res, next) => {
   try {
     const { username } = req.body;
-
-    if (!username) {
-      throw new BAD_REQUEST_ERROR("missing email/password!");
-    }
-
     const user = await User.findOne({ username });
 
     if (user) {
-      throw new NOT_FOUND_ERROR("User already exists with email!");
+      throw new NOT_FOUND_ERROR("User already exists with username!");
     }
 
     const newUser = await User.create(req.body);
@@ -35,21 +30,17 @@ const loginUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
-    if (!username || !password) {
-      throw new BAD_REQUEST_ERROR("Missing credentials!");
-    }
-
     const user = await User.findOne({ username });
 
     if (!user) {
-      throw new NOT_FOUND_ERROR("No user exists with this email!");
+      throw new NOT_FOUND_ERROR("No user found with the username!");
     }
 
     if (!comparePassword(password, user.password)) {
       throw new BAD_REQUEST_ERROR("Invalid credentials!");
     }
 
-    const token = generateToken({ username });
+    const token = generateToken({ id: user._id });
 
     res.cookie("token", token, {
       maxAge: 1000 * 60 * 10,

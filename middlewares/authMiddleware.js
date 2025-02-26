@@ -1,7 +1,7 @@
 const { UNAUTHORIZED_ERROR } = require("../helpers/customErrors");
 const { verifyToken } = require("../utilities/jwtUtils");
 
-export const authenticateUser = (req, res, next) => {
+const authenticateUser = (req, res, next) => {
   try {
     const { token } = req.cookies;
 
@@ -15,4 +15,8 @@ export const authenticateUser = (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  authenticateUser,
 };
