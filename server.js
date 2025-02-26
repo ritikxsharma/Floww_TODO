@@ -5,6 +5,7 @@ const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/errorHandler");
+const cookieParser = require("cookie-parser");
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -15,6 +16,7 @@ connectDB()
 //Middlewares
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser())
 
 //Routes
 app.use("/api", authRoutes);
