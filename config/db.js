@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 
+/**
+ * @function  connectDB
+ * @desc      Establishes a connection to MongoDB using Mongoose
+ */
 const connectDB = async () => {
   await mongoose
     .connect(process.env.MONGO_URI)

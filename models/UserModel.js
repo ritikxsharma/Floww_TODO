@@ -1,12 +1,17 @@
 const mongoose = require("mongoose");
 const { hashPassword } = require("../utilities/passwordUtils");
 
+/**
+ * @model User
+ * @desc  User schema for storing user credentials in MongoDB
+ */
 const schema = new mongoose.Schema(
   {
     username: {
       type: String,
       required: true,
       unique: true,
+      trim: true,
     },
     password: {
       type: String,

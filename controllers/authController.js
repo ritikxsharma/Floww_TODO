@@ -7,6 +7,11 @@ const User = require("../models/UserModel");
 const { generateToken } = require("../utilities/jwtUtils");
 const { comparePassword } = require("../utilities/passwordUtils");
 
+/**
+ * @route   POST /api/auth/register
+ * @desc    Register a new user
+ * @access  Public
+ */
 const registerUser = async (req, res, next) => {
   try {
     const { username } = req.body;
@@ -26,6 +31,11 @@ const registerUser = async (req, res, next) => {
   }
 };
 
+/**
+ * @route   POST /api/auth/login
+ * @desc    Authenticate user and generate token
+ * @access  Public
+ */
 const loginUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
@@ -36,7 +46,7 @@ const loginUser = async (req, res, next) => {
       throw new NOT_FOUND_ERROR("No user found with the username!");
     }
 
-    if (!comparePassword(password, user.password)) {
+    if (!(await comparePassword(password, user.password))) {
       throw new BAD_REQUEST_ERROR("Invalid credentials!");
     }
 

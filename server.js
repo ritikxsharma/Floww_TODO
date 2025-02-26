@@ -10,27 +10,41 @@ const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 5000;
 const app = express();
 
-//Connect to Database
-connectDB()
+/**
+ * @desc  Connect to MongoDB database
+ */
+connectDB();
 
-//Middlewares
-app.use(cors());
-app.use(express.json());
-app.use(cookieParser())
+/**
+ * @desc  Initialize Middleware
+ */
+app.use(cors()); //Enables Cross-Origin Resource Sharing
+app.use(express.json()); //Parse JSON request bodies
+app.use(cookieParser()); //Parse cookies from requests
 
-//Routes
+/**
+ * @desc  API routes
+ */
 app.use("/api", authRoutes);
 app.use("/api", taskRoutes);
 
-//Default Health Route
+/**
+ * @route   GET /api/checkHealth
+ * @desc    Health check endpoint to verify API Status
+ * @access  Public
+ */
 app.get("/api/checkHealth", (req, res) => {
   res.status(200).json({ message: "API is running..." });
 });
 
-//Error Handler
-app.use(errorHandler)
+/**
+ * @desc  Global Error Handler Middleware
+ */
+app.use(errorHandler);
 
-//Start Server
+/**
+ * @desc  Start Express Server
+ */
 app.listen(PORT, () => {
   console.log(`Server running on PORT: ${PORT}`);
 });

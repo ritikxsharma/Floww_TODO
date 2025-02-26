@@ -1,22 +1,79 @@
-const createTask = (req, res) => {
-    res.json({ message: 'Task created (Stub)' })
-}
+const Task = require("../models/TaskModel");
+const HTTP_STATUS = require("../constants/httpCodes");
 
-const getTasks = (req, res) => {
-    res.json({ message: 'All tasks (Stub)' })
-}
+/**
+ * @route   POST /api/tasks
+ * @desc    Create a new task
+ * @access  Private (Requires Autehntication)
+ */
+const createTask = async (req, res, next) => {
+  try {
+    const newTask = await Task.create({
+      ...req.body,
+      user: req.user.id,
+    });
 
-const updateTask = (req, res) => {
-    res.json({ message: 'Task updated (Stub)' })
-}
+    res
+      .status(HTTP_STATUS.CREATED)
+      .json({ message: "task created successfully", task: newTask });
+  } catch (error) {
+    next(error);
+  }
+};
 
-const deleteTask = (req, res) => {
-    res.json({ message: 'Task deleted (Stub)' })
-}
+/**
+ * @route   GET /api/tasks
+ * @desc    Get all tasks for the logged-in user
+ * @access  Private (Requires Autehntication)
+ */
+const getTasks = async (req, res, next) => {
+  try {
+    const tasks = await Task.find({ user: req.user.id });
+
+    res.status(HTTP_STATUS.OK).json({ tasks });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @route   PUT /api/tasks/:id
+ * @desc    Update a task by ID
+ * @access  Private (Requires Autehntication & Task Ownership)
+ */
+const updateTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const updatedTask = await Task.findByIdAndUpdate(id, req.body, {
+      new: true,
+    });
+
+    res.status(HTTP_STATUS.OK).json({ message: "Task updated", updatedTask });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @route   DELETE /api/tasks/:id
+ * @desc    Delete a task by ID
+ * @access  Private (Requires Autehntication & Task Ownership)
+ */
+const deleteTask = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const deletedTask = await Task.findByIdAndDelete(id);
+
+    res.status(HTTP_STATUS.OK).json({ message: "Task updated", deletedTask });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
-    createTask,
-    getTasks,
-    updateTask,
-    deleteTask
-}
+  createTask,
+  getTasks,
+  updateTask,
+  deleteTask,
+};

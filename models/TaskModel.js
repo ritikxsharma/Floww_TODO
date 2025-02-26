@@ -1,5 +1,9 @@
 const mongoose = require("mongoose");
 
+/**
+ * @model Task
+ * @desc  Task schema for storing user tasks in MongoDB
+ */
 const schema = new mongoose.Schema(
   {
     title: {
