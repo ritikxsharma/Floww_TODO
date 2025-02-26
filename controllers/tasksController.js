@@ -28,7 +28,15 @@ const createTask = async (req, res, next) => {
  */
 const getTasks = async (req, res, next) => {
   try {
-    const tasks = await Task.find({ user: req.user.id });
+    const { is_completed } = req.query;
+
+    let filter = { user: req.user.id };
+
+    if (is_completed !== undefined) {
+      filter.is_completed = is_completed === "true";
+    }
+
+    const tasks = await Task.find(filter);
 
     res.status(HTTP_STATUS.OK).json({ tasks });
   } catch (error) {
