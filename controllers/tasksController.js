@@ -23,7 +23,7 @@ const createTask = async (req, res, next) => {
 
 /**
  * @route   GET /api/tasks
- * @desc    Get all tasks for the logged-in user
+ * @desc    Get all tasks for the authenticated user with an optional filter (is_completed)
  * @access  Private (Requires Autehntication)
  */
 const getTasks = async (req, res, next) => {
